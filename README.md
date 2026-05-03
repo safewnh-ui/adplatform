@@ -1,1 +1,824 @@
-# adplatform
+index.html
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إعلاني ✦ - منصة إدارة الإعلانات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07070f;
+  --surface: #0f0f1a;
+  --card: #161624;
+  --card2: #1c1c2e;
+  --border: #252538;
+  --accent: #7c6fff;
+  --accent2: #ff6b8a;
+  --accent3: #3ecf8e;
+  --gold: #f5c842;
+  --blue: #38bdf8;
+  --text: #eaeaf5;
+  --muted: #6b6b8a;
+  --radius: 14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* BG mesh */
+.bg-mesh{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.bg-mesh::before{content:’’;position:absolute;top:-30%;right:-20%;width:60%;height:60%;background:radial-gradient(circle,rgba(124,111,255,.07) 0%,transparent 65%);animation:meshA 10s ease-in-out infinite alternate;}
+.bg-mesh::after{content:’’;position:absolute;bottom:-20%;left:-10%;width:50%;height:50%;background:radial-gradient(circle,rgba(62,207,142,.05) 0%,transparent 65%);animation:meshB 12s ease-in-out infinite alternate;}
+@keyframes meshA{from{transform:translate(0,0) scale(1);}to{transform:translate(5%,8%) scale(1.15);}}
+@keyframes meshB{from{transform:translate(0,0) scale(1);}to{transform:translate(-5%,-6%) scale(1.1);}}
+
+/* Sidebar */
+.sidebar{position:fixed;right:0;top:0;height:100vh;width:230px;background:var(–surface);border-left:1px solid var(–border);z-index:200;display:flex;flex-direction:column;}
+.logo{padding:24px 20px 20px;border-bottom:1px solid var(–border);}
+.logo h1{font-size:20px;font-weight:900;background:linear-gradient(135deg,var(–accent),var(–accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo p{font-size:11px;color:var(–muted);margin-top:2px;}
+.nav-section{font-size:10px;font-weight:700;color:var(–muted);padding:16px 20px 6px;letter-spacing:1.5px;text-transform:uppercase;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 20px;cursor:pointer;color:var(–muted);font-size:13px;font-weight:600;transition:all .2s;border-right:3px solid transparent;margin:1px 0;}
+.nav-item:hover,.nav-item.active{color:var(–text);background:rgba(124,111,255,.08);border-right-color:var(–accent);}
+.nav-item .ni{font-size:16px;width:20px;text-align:center;}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(–border);}
+.user-row{display:flex;align-items:center;gap:10px;}
+.uavatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(–accent),var(–accent2));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0;}
+.uname{font-size:13px;font-weight:700;}
+.urole{font-size:11px;color:var(–muted);}
+
+/* Main */
+.main{margin-right:230px;padding:28px 32px;position:relative;z-index:1;min-height:100vh;}
+
+/* Page system */
+.page{display:none;animation:fadeUp .4s ease both;}
+.page.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* Topbar */
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;}
+.page-ttl h2{font-size:24px;font-weight:900;letter-spacing:-.5px;}
+.page-ttl p{color:var(–muted);font-size:13px;margin-top:3px;}
+.actions{display:flex;gap:10px;align-items:center;}
+
+/* Buttons */
+.btn{padding:9px 18px;border-radius:10px;border:none;cursor:pointer;font-family:‘Cairo’,sans-serif;font-size:13px;font-weight:700;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-primary{background:linear-gradient(135deg,var(–accent),#9d8fff);color:#fff;box-shadow:0 4px 14px rgba(124,111,255,.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,111,255,.45);}
+.btn-ghost{background:transparent;color:var(–text);border:1px solid var(–border);}
+.btn-ghost:hover{background:var(–card);}
+.btn-success{background:linear-gradient(135deg,var(–accent3),#2dd4a0);color:#0a0a0f;}
+.btn-danger{background:rgba(255,107,138,.12);color:var(–accent2);border:1px solid rgba(255,107,138,.2);}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:var(–card);border:1px solid var(–border);border-radius:var(–radius);padding:18px;position:relative;overflow:hidden;transition:all .3s;animation:fadeUp .5s ease both;}
+.stat-card:hover{transform:translateY(-3px);border-color:rgba(124,111,255,.4);}
+.stat-card::after{content:’’;position:absolute;top:0;left:0;right:0;height:2px;}
+.sc1::after{background:linear-gradient(90deg,var(–accent),transparent);}
+.sc2::after{background:linear-gradient(90deg,var(–accent2),transparent);}
+.sc3::after{background:linear-gradient(90deg,var(–accent3),transparent);}
+.sc4::after{background:linear-gradient(90deg,var(–gold),transparent);}
+.sc5::after{background:linear-gradient(90deg,var(–blue),transparent);}
+.stat-icon{font-size:26px;opacity:.12;position:absolute;left:14px;top:14px;}
+.stat-lbl{font-size:11px;color:var(–muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.stat-val{font-size:26px;font-weight:900;letter-spacing:-1px;margin-bottom:6px;}
+.badge-chg{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;display:inline-block;}
+.up{background:rgba(62,207,142,.1);color:var(–accent3);}
+.down{background:rgba(255,107,138,.1);color:var(–accent2);}
+
+/* Card */
+.card{background:var(–card);border:1px solid var(–border);border-radius:var(–radius);padding:22px;animation:fadeUp .5s ease both;}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.card-ttl{font-size:14px;font-weight:700;}
+.cbadge{font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(124,111,255,.12);color:var(–accent);font-weight:700;}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:right;font-size:10px;color:var(–muted);font-weight:700;padding:8px 12px;border-bottom:1px solid var(–border);text-transform:uppercase;letter-spacing:.5px;}
+.tbl td{padding:13px 12px;font-size:13px;border-bottom:1px solid rgba(37,37,56,.6);vertical-align:middle;}
+.tbl tr:last-child td{border:none;}
+.tbl tr:hover td{background:rgba(124,111,255,.03);}
+.tbl-name{font-weight:700;margin-bottom:2px;}
+.tbl-sub{font-size:11px;color:var(–muted);}
+
+/* Status badges */
+.sbadge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.sbadge::before{content:’’;width:5px;height:5px;border-radius:50%;}
+.s-active{background:rgba(62,207,142,.1);color:var(–accent3);}
+.s-active::before{background:var(–accent3);animation:pulse 1.5s infinite;}
+.s-pause{background:rgba(245,200,66,.1);color:var(–gold);}
+.s-pause::before{background:var(–gold);}
+.s-ended{background:rgba(255,107,138,.1);color:var(–accent2);}
+.s-ended::before{background:var(–accent2);}
+.s-pending{background:rgba(56,189,248,.1);color:var(–blue);}
+.s-pending::before{background:var(–blue);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* Progress */
+.prog-wrap{background:var(–border);border-radius:10px;height:5px;width:90px;}
+.prog-bar{height:5px;border-radius:10px;background:linear-gradient(90deg,var(–accent),var(–accent2));}
+
+/* Avatar initials */
+.av{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0;}
+
+/* Grid layouts */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;}
+.g32{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:20px;}
+.mb20{margin-bottom:20px;}
+
+/* Marketer card */
+.mkt-card{background:var(–card2);border:1px solid var(–border);border-radius:var(–radius);padding:18px;transition:all .3s;animation:fadeUp .5s ease both;cursor:pointer;}
+.mkt-card:hover{transform:translateY(-3px);border-color:rgba(124,111,255,.4);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.mkt-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.mkt-av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;flex-shrink:0;}
+.mkt-name{font-size:14px;font-weight:700;}
+.mkt-cat{font-size:11px;color:var(–muted);margin-top:2px;}
+.mkt-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.mkt-stat{background:var(–surface);border-radius:8px;padding:8px;text-align:center;}
+.mkt-stat-val{font-size:14px;font-weight:900;}
+.mkt-stat-lbl{font-size:10px;color:var(–muted);margin-top:2px;}
+.mkt-rating{display:flex;align-items:center;gap:4px;font-size:12px;margin-top:10px;color:var(–gold);}
+.mkt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+
+/* Payment items */
+.pay-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(37,37,56,.6);}
+.pay-item:last-child{border:none;}
+.pay-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.pay-info{flex:1;}
+.pay-name{font-size:13px;font-weight:700;}
+.pay-date{font-size:11px;color:var(–muted);margin-top:2px;}
+.pay-amount{font-size:15px;font-weight:900;}
+.pay-amount.in{color:var(–accent3);}
+.pay-amount.out{color:var(–accent2);}
+
+/* Mini bars chart */
+.bars-wrap{display:flex;align-items:flex-end;gap:5px;height:60px;}
+.bar{flex:1;border-radius:4px 4px 0 0;background:rgba(124,111,255,.2);transition:.3s;cursor:pointer;}
+.bar:hover,.bar.hl{background:linear-gradient(180deg,var(–accent),#9d8fff);}
+
+/* Search/filter row */
+.filter-row{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.search-box{flex:1;min-width:180px;background:var(–card);border:1px solid var(–border);border-radius:10px;padding:9px 14px;color:var(–text);font-family:‘Cairo’,sans-serif;font-size:13px;outline:none;}
+.search-box:focus{border-color:var(–accent);}
+.filter-sel{background:var(–card);border:1px solid var(–border);border-radius:10px;padding:9px 14px;color:var(–text);font-family:‘Cairo’,sans-serif;font-size:13px;outline:none;cursor:pointer;}
+
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.overlay.show{display:flex;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.modal{background:var(–surface);border:1px solid var(–border);border-radius:20px;padding:28px;width:500px;max-width:92vw;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal-ttl{font-size:18px;font-weight:900;margin-bottom:22px;}
+.fg{margin-bottom:16px;}
+.flbl{display:block;font-size:11px;font-weight:700;color:var(–muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px;}
+.finput{width:100%;background:var(–card);border:1px solid var(–border);border-radius:10px;padding:10px 14px;color:var(–text);font-family:‘Cairo’,sans-serif;font-size:13px;outline:none;transition:.2s;}
+.finput:focus{border-color:var(–accent);box-shadow:0 0 0 3px rgba(124,111,255,.12);}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.modal-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;}
+
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(–accent3);color:#07070f;padding:11px 22px;border-radius:50px;font-weight:700;font-size:13px;z-index:2000;transition:transform .4s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.err{background:var(–accent2);color:#fff;}
+
+/* Summary row */
+.sum-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.sum-box{background:var(–card);border:1px solid var(–border);border-radius:var(–radius);padding:16px;text-align:center;}
+.sum-val{font-size:22px;font-weight:900;margin-bottom:4px;}
+.sum-lbl{font-size:11px;color:var(–muted);}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;background:var(–card);border-radius:10px;padding:4px;margin-bottom:20px;width:fit-content;}
+.tab{padding:7px 16px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600;color:var(–muted);transition:.2s;}
+.tab.active{background:var(–accent);color:#fff;}
+
+/* Empty state */
+.empty{text-align:center;padding:48px 24px;color:var(–muted);}
+.empty-ico{font-size:48px;margin-bottom:12px;opacity:.4;}
+.empty p{font-size:14px;}
+
+@media(max-width:900px){
+.sidebar{display:none;}
+.main{margin-right:0;padding:16px;}
+.stats-grid{grid-template-columns:1fr 1fr;}
+.g2,.g32,.mkt-grid{grid-template-columns:1fr;}
+.frow{grid-template-columns:1fr;}
+}
+</style>
+
+</head>
+<body>
+<div class="bg-mesh"></div>
+
+<!-- Sidebar -->
+
+<nav class="sidebar">
+  <div class="logo">
+    <h1>إعلاني ✦</h1>
+    <p>منصة إدارة الإعلانات</p>
+  </div>
+  <div class="nav-section">الرئيسية</div>
+  <div class="nav-item active" onclick="goTo('dashboard',this)"><span class="ni">📊</span> لوحة التحكم</div>
+  <div class="nav-item" onclick="goTo('campaigns',this)"><span class="ni">📢</span> الحملات</div>
+  <div class="nav-section">الأشخاص</div>
+  <div class="nav-item" onclick="goTo('marketers',this)"><span class="ni">🤝</span> المسوقون</div>
+  <div class="nav-item" onclick="goTo('advertisers',this)"><span class="ni">🏢</span> المعلنون</div>
+  <div class="nav-section">المالية</div>
+  <div class="nav-item" onclick="goTo('payments',this)"><span class="ni">💰</span> المدفوعات</div>
+  <div class="nav-item" onclick="goTo('reports',this)"><span class="ni">📈</span> التقارير</div>
+  <div class="nav-section">النظام</div>
+  <div class="nav-item" onclick="goTo('settings',this)"><span class="ni">⚙️</span> الإعدادات</div>
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="uavatar">م</div>
+      <div>
+        <div class="uname">محمد أحمد</div>
+        <div class="urole">مدير المنصة</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+
+<main class="main">
+
+<!-- ===== DASHBOARD ===== -->
+
+<div id="dashboard" class="page active">
+  <div class="topbar">
+    <div class="page-ttl"><h2>لوحة التحكم 📊</h2><p>ملخص نشاط منصتك — اليوم</p></div>
+    <div class="actions">
+      <button class="btn btn-ghost">📥 تصدير</button>
+      <button class="btn btn-primary" onclick="openModal('campaign')">＋ حملة جديدة</button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card sc1" style="animation-delay:.05s">
+      <div class="stat-icon">📢</div>
+      <div class="stat-lbl">الحملات النشطة</div>
+      <div class="stat-val" style="color:var(--accent)">24</div>
+      <span class="badge-chg up">▲ 12%</span>
+    </div>
+    <div class="stat-card sc2" style="animation-delay:.1s">
+      <div class="stat-icon">👆</div>
+      <div class="stat-lbl">النقرات الإجمالية</div>
+      <div class="stat-val" style="color:var(--accent2)">148K</div>
+      <span class="badge-chg up">▲ 23%</span>
+    </div>
+    <div class="stat-card sc3" style="animation-delay:.15s">
+      <div class="stat-icon">💸</div>
+      <div class="stat-lbl">الأرباح المحققة</div>
+      <div class="stat-val" style="color:var(--accent3)">$8,240</div>
+      <span class="badge-chg up">▲ 18%</span>
+    </div>
+    <div class="stat-card sc4" style="animation-delay:.2s">
+      <div class="stat-icon">🤝</div>
+      <div class="stat-lbl">المسوقون النشطون</div>
+      <div class="stat-val" style="color:var(--gold)">63</div>
+      <span class="badge-chg down">▼ 3%</span>
+    </div>
+  </div>
+
+  <div class="g32">
+    <div class="card" style="animation-delay:.2s">
+      <div class="card-hd"><span class="card-ttl">أداء الحملات — آخر 7 أيام</span><span class="cbadge">نقرات</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px;">
+        <span>أحد</span><span>اثنين</span><span>ثلاثاء</span><span>أربعاء</span><span>خميس</span><span>جمعة</span><span>سبت</span>
+      </div>
+      <div class="bars-wrap">
+        <div class="bar" style="height:55%" title="11,200 نقرة"></div>
+        <div class="bar" style="height:70%" title="14,800 نقرة"></div>
+        <div class="bar" style="height:42%" title="9,100 نقرة"></div>
+        <div class="bar hl" style="height:92%" title="21,000 نقرة"></div>
+        <div class="bar" style="height:75%" title="16,300 نقرة"></div>
+        <div class="bar" style="height:60%" title="12,700 نقرة"></div>
+        <div class="bar" style="height:82%" title="18,500 نقرة"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:10px;">
+        <span>⬆ أعلى يوم: الأربعاء (21K نقرة)</span>
+        <span>متوسط: 14,800/يوم</span>
+      </div>
+    </div>
+    <div class="card" style="animation-delay:.25s">
+      <div class="card-hd"><span class="card-ttl">توزيع الأرباح</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>ملابس</span><span style="color:var(--accent)">38%</span></div>
+          <div class="prog-wrap" style="width:100%"><div class="prog-bar" style="width:38%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>تقنية</span><span style="color:var(--accent2)">27%</span></div>
+          <div class="prog-wrap" style="width:100%"><div class="prog-bar" style="width:27%;background:linear-gradient(90deg,var(--accent2),#ff9eb5)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>طعام</span><span style="color:var(--accent3)">20%</span></div>
+          <div class="prog-wrap" style="width:100%"><div class="prog-bar" style="width:20%;background:linear-gradient(90deg,var(--accent3),#7ef5c0)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>سفر</span><span style="color:var(--gold)">15%</span></div>
+          <div class="prog-wrap" style="width:100%"><div class="prog-bar" style="width:15%;background:linear-gradient(90deg,var(--gold),#ffe87a)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="animation-delay:.3s">
+    <div class="card-hd"><span class="card-ttl">آخر الحملات</span><button class="btn btn-ghost" style="padding:5px 12px;font-size:12px" onclick="goTo('campaigns',null)">عرض الكل</button></div>
+    <table class="tbl">
+      <thead><tr>
+        <th>الحملة</th><th>الميزانية</th><th>النقرات</th><th>التحويلات</th><th>الإنجاز</th><th>الحالة</th><th></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><div class="tbl-name">حملة رمضان 2025</div><div class="tbl-sub">متجر الأناقة</div></td><td style="font-weight:700">$1,200</td><td>42,300</td><td style="color:var(--accent3);font-weight:700">854</td><td><div class="prog-wrap"><div class="prog-bar" style="width:78%"></div></div><span style="font-size:11px;color:var(--muted)">78%</span></td><td><span class="sbadge s-active">نشطة</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">تفاصيل</button></td></tr>
+        <tr><td><div class="tbl-name">إطلاق جهاز X1</div><div class="tbl-sub">تك العرب</div></td><td style="font-weight:700">$2,500</td><td>61,000</td><td style="color:var(--accent3);font-weight:700">1,240</td><td><div class="prog-wrap"><div class="prog-bar" style="width:55%"></div></div><span style="font-size:11px;color:var(--muted)">55%</span></td><td><span class="sbadge s-active">نشطة</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">تفاصيل</button></td></tr>
+        <tr><td><div class="tbl-name">عروض الصيف</div><div class="tbl-sub">مطاعم الذوق</div></td><td style="font-weight:700">$800</td><td>18,500</td><td style="color:var(--accent3);font-weight:700">320</td><td><div class="prog-wrap"><div class="prog-bar" style="width:30%;background:linear-gradient(90deg,var(--gold),orange)"></div></div><span style="font-size:11px;color:var(--muted)">30%</span></td><td><span class="sbadge s-pause">متوقفة</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">تفاصيل</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== CAMPAIGNS ===== -->
+
+<div id="campaigns" class="page">
+  <div class="topbar">
+    <div class="page-ttl"><h2>الحملات الإعلانية 📢</h2><p>إدارة وتتبع جميع حملاتك</p></div>
+    <div class="actions">
+      <button class="btn btn-ghost">📥 تصدير</button>
+      <button class="btn btn-primary" onclick="openModal('campaign')">＋ حملة جديدة</button>
+    </div>
+  </div>
+  <div class="filter-row">
+    <input class="search-box" placeholder="🔍  بحث عن حملة...">
+    <select class="filter-sel"><option>كل الحالات</option><option>نشطة</option><option>متوقفة</option><option>منتهية</option></select>
+    <select class="filter-sel"><option>كل المعلنين</option><option>متجر الأناقة</option><option>تك العرب</option><option>مطاعم الذوق</option><option>سفريات الحلم</option></select>
+  </div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr>
+        <th>#</th><th>اسم الحملة</th><th>المُعلِن</th><th>الميزانية</th><th>النقرات</th><th>التحويلات</th><th>العمولة</th><th>الإنجاز</th><th>التاريخ</th><th>الحالة</th><th>إجراء</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--muted)">01</td><td><div class="tbl-name">حملة رمضان 2025</div></td><td>متجر الأناقة</td><td>$1,200</td><td>42,300</td><td style="color:var(--accent3);font-weight:700">854</td><td>15%</td><td><div class="prog-wrap"><div class="prog-bar" style="width:78%"></div></div><span style="font-size:10px;color:var(--muted)">78%</span></td><td style="font-size:11px;color:var(--muted)">1 مايو - 30 مايو</td><td><span class="sbadge s-active">نشطة</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openModal('edit')">✏️</button></td></tr>
+        <tr><td style="color:var(--muted)">02</td><td><div class="tbl-name">إطلاق جهاز X1</div></td><td>تك العرب</td><td>$2,500</td><td>61,000</td><td style="color:var(--accent3);font-weight:700">1,240</td><td>12%</td><td><div class="prog-wrap"><div class="prog-bar" style="width:55%"></div></div><span style="font-size:10px;color:var(--muted)">55%</span></td><td style="font-size:11px;color:var(--muted)">10 أبريل - 10 يونيو</td><td><span class="sbadge s-active">نشطة</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openModal('edit')">✏️</button></td></tr>
+        <tr><td style="color:var(--muted)">03</td><td><div class="tbl-name">عروض الصيف</div></td><td>مطاعم الذوق</td><td>$800</td><td>18,500</td><td style="color:var(--accent3);font-weight:700">320</td><td>10%</td><td><div class="prog-wrap"><div class="prog-bar" style="width:30%;background:linear-gradient(90deg,var(--gold),orange)"></div></div><span style="font-size:10px;color:var(--muted)">30%</span></td><td style="font-size:11px;color:var(--muted)">15 مايو - 15 يوليو</td><td><span class="sbadge s-pause">متوقفة</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openModal('edit')">✏️</button></td></tr>
+        <tr><td style="color:var(--muted)">04</td><td><div class="tbl-name">رحلات أوروبا</div></td><td>سفريات الحلم</td><td>$1,800</td><td>27,100</td><td style="color:var(--accent3);font-weight:700">560</td><td>18%</td><td><div class="prog-wrap"><div class="prog-bar" style="width:100%;background:linear-gradient(90deg,var(--accent2),#ff3d71)"></div></div><span style="font-size:10px;color:var(--muted)">100%</span></td><td style="font-size:11px;color:var(--muted)">1 مارس - 30 أبريل</td><td><span class="sbadge s-ended">منتهية</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openModal('edit')">✏️</button></td></tr>
+        <tr><td style="color:var(--muted)">05</td><td><div class="tbl-name">كورس الديجيتال</div></td><td>أكاديمية النجاح</td><td>$600</td><td>—</td><td style="color:var(--muted)">—</td><td>20%</td><td><div class="prog-wrap"><div class="prog-bar" style="width:0%"></div></div><span style="font-size:10px;color:var(--muted)">0%</span></td><td style="font-size:11px;color:var(--muted)">10 مايو - 10 يونيو</td><td><span class="sbadge s-pending">قادمة</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openModal('edit')">✏️</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== MARKETERS ===== -->
+
+<div id="marketers" class="page">
+  <div class="topbar">
+    <div class="page-ttl"><h2>المسوقون 🤝</h2><p>إدارة شبكة المسوقين وتتبع أدائهم</p></div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="openModal('marketer')">＋ إضافة مسوق</button>
+    </div>
+  </div>
+
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="stat-card sc1" style="animation-delay:.05s">
+      <div class="stat-icon">🤝</div>
+      <div class="stat-lbl">إجمالي المسوقين</div>
+      <div class="stat-val" style="color:var(--accent)">87</div>
+      <span class="badge-chg up">▲ 8 هذا الشهر</span>
+    </div>
+    <div class="stat-card sc3" style="animation-delay:.1s">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-lbl">مسوقون نشطون</div>
+      <div class="stat-val" style="color:var(--accent3)">63</div>
+      <span class="badge-chg up">▲ 5%</span>
+    </div>
+    <div class="stat-card sc4" style="animation-delay:.15s">
+      <div class="stat-icon">💰</div>
+      <div class="stat-lbl">عمولات صُرفت</div>
+      <div class="stat-val" style="color:var(--gold)">$14,200</div>
+      <span class="badge-chg up">▲ 22%</span>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <input class="search-box" placeholder="🔍  بحث عن مسوق...">
+    <select class="filter-sel"><option>كل التخصصات</option><option>سوشيال ميديا</option><option>بلوغر</option><option>يوتيوبر</option><option>مؤثر</option></select>
+    <select class="filter-sel"><option>ترتيب: الأعلى ربحاً</option><option>ترتيب: الأكثر نقرات</option><option>ترتيب: الأحدث</option></select>
+  </div>
+
+  <div class="mkt-grid">
+    <div class="mkt-card" style="animation-delay:.1s">
+      <div class="mkt-top">
+        <div class="mkt-av" style="background:rgba(124,111,255,.15);color:var(--accent)">أح</div>
+        <div>
+          <div class="mkt-name">أحمد السعيد</div>
+          <div class="mkt-cat">سوشيال ميديا • نشط</div>
+        </div>
+        <span class="sbadge s-active" style="margin-right:auto">نشط</span>
+      </div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><div class="mkt-stat-val" style="color:var(--accent3)">$2,400</div><div class="mkt-stat-lbl">أرباح</div></div>
+        <div class="mkt-stat"><div class="mkt-stat-val">38K</div><div class="mkt-stat-lbl">نقرات</div></div>
+        <div class="mkt-stat"><div class="mkt-stat-val" style="color:var(--accent2)">720</div><div class="mkt-stat-lbl">تحويل</div></div>
+      </div>
+      <div class="mkt-rating">⭐⭐⭐⭐⭐ <span style="color:var(--muted);font-size:11px">(4.9)</span></div>
+    </div>
+    <div class="mkt-card" style="animation-delay:.15s">
+      <div class="mkt-top">
+        <div class="mkt-av" style="background:rgba(255,107,138,.15);color:var(--accent2)">سا</div>
+        <div>
+          <div class="mkt-name">سارة المحمد</div>
+          <div class="mkt-cat">يوتيوبر • نشط</div>
+        </div>
+        <span class="sbadge s-active" style="margin-right:auto">نشط</span>
+      </div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><div class="mkt-stat-val" style="color:var(--accent3)">$1,890</div><div class="mkt-stat-lbl">أرباح</div></div>
+        <div class="mkt-stat"><div class="mkt-stat-val">24K</div><div class="mkt-stat-lbl">نقرات</div></div>
+        <div class="mkt-stat"><div class="mkt-stat-val" style="color:var(--accent2)">480</div><div class="mkt-stat-lbl">تحويل</div></div>
+      </div>
+      <div class="mkt-rating">⭐⭐⭐⭐⭐ <span style="color:var(--muted);font-size:11px">(4.8)</span></div>
+    </div>
+    <div class="mkt-card" style="animation-delay:.2s">
+      <div class="mkt-top">
+        <div class="mkt-av" style="background:rgba(62,207,142,.15);color:var(--accent3)">عم</div>
+        <div>
+          <div class="mkt-name">عمر الرشيد</div>
+          <div class="mkt-cat">بلوغر • نشط</div>
+        </div>
+        <span class="sbadge s-active" style="margin-right:auto">نشط</span>
+      </div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><div class="mkt-stat-val" style="color:var(--accent3)">$1,540</div><div class="mkt-stat-lbl">أرباح</div></div>
+        <div class="mkt-stat"><div class="mkt-stat-val">19K</div><div class="mkt-stat-lbl">نقرات</div></div>
+        <div class="mkt-stat"><div class="mkt-stat-val" style="color:var(--accent2)">390</div><div class="mkt-stat-lbl">تحويل</div></div>
+      </div>
+      <div class="mkt-rating">⭐⭐⭐⭐ <span style="color:var(--muted);font-size:11px">(4.6)</span></div>
+    </div>
+    <div class="mkt-card" style="animation-delay:.25s">
+      <div class="mkt-top">
+        <div class="mkt-av" style="background:rgba(245,200,66,.15);color:var(--gold)">نو</div>
+        <div>
+          <div class="mkt-name">نور العتيبي</div>
+          <div class="mkt-cat">مؤثر • نشط</div>
+        </div>
+        <span class="sbadge s-active" style="margin-right:auto">نشط</span>
+      </div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><div class="mkt-stat-val" style="color:var(--accent3)">$1,200</div><div class="mkt-stat-lbl">أرباح</div></div>
+        <div class="mkt-stat"><div class="mkt-stat-val">16K</div><div class="mkt-stat-lbl">نقرات</div></div>
+        <div class="mkt-stat"><div class="mkt-stat-val" style="color:var(--accent2)">310</div><div class="mkt-stat-lbl">تحويل</div></div>
+      </div>
+      <div class="mkt-rating">⭐⭐⭐⭐ <span style="color:var(--muted);font-size:11px">(4.5)</span></div>
+    </div>
+    <div class="mkt-card" style="animation-delay:.3s">
+      <div class="mkt-top">
+        <div class="mkt-av" style="background:rgba(56,189,248,.15);color:var(--blue)">خا</div>
+        <div>
+          <div class="mkt-name">خالد منصور</div>
+          <div class="mkt-cat">سوشيال ميديا • متوقف</div>
+        </div>
+        <span class="sbadge s-pause" style="margin-right:auto">متوقف</span>
+      </div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><div class="mkt-stat-val" style="color:var(--accent3)">$840</div><div class="mkt-stat-lbl">أرباح</div></div>
+        <div class="mkt-stat"><div class="mkt-stat-val">11K</div><div class="mkt-stat-lbl">نقرات</div></div>
+        <div class="mkt-stat"><div class="mkt-stat-val" style="color:var(--accent2)">210</div><div class="mkt-stat-lbl">تحويل</div></div>
+      </div>
+      <div class="mkt-rating">⭐⭐⭐⭐ <span style="color:var(--muted);font-size:11px">(4.3)</span></div>
+    </div>
+    <div class="mkt-card" style="animation-delay:.35s;border:2px dashed var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;min-height:160px" onclick="openModal('marketer')">
+      <div style="font-size:32px;opacity:.3">＋</div>
+      <div style="color:var(--muted);font-size:13px;font-weight:700">إضافة مسوق جديد</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADVERTISERS ===== -->
+
+<div id="advertisers" class="page">
+  <div class="topbar">
+    <div class="page-ttl"><h2>المعلنون 🏢</h2><p>إدارة حسابات المعلنين وحملاتهم</p></div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="openModal('advertiser')">＋ إضافة معلن</button>
+    </div>
+  </div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>المعلن</th><th>القطاع</th><th>الحملات</th><th>إجمالي الإنفاق</th><th>النقرات</th><th>التحويلات</th><th>الحالة</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="background:rgba(124,111,255,.15);color:var(--accent)">أن</div><div><div class="tbl-name">متجر الأناقة</div><div class="tbl-sub">boutique@email.com</div></div></div></td><td>ملابس وأزياء</td><td style="font-weight:700">3</td><td style="color:var(--accent3);font-weight:700">$3,600</td><td>64,200</td><td>1,420</td><td><span class="sbadge s-active">نشط</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">تفاصيل</button></td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="background:rgba(56,189,248,.15);color:var(--blue)">تك</div><div><div class="tbl-name">تك العرب</div><div class="tbl-sub">info@techarab.com</div></div></div></td><td>تقنية وإلكترونيات</td><td style="font-weight:700">2</td><td style="color:var(--accent3);font-weight:700">$4,200</td><td>82,000</td><td>1,900</td><td><span class="sbadge s-active">نشط</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">تفاصيل</button></td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="background:rgba(255,107,138,.15);color:var(--accent2)">مط</div><div><div class="tbl-name">مطاعم الذوق</div><div class="tbl-sub">contact@alzawq.com</div></div></div></td><td>مطاعم وأغذية</td><td style="font-weight:700">1</td><td style="color:var(--accent3);font-weight:700">$800</td><td>18,500</td><td>320</td><td><span class="sbadge s-pause">متوقف</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">تفاصيل</button></td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="background:rgba(245,200,66,.15);color:var(--gold)">سف</div><div><div class="tbl-name">سفريات الحلم</div><div class="tbl-sub">hello@dreamtrips.com</div></div></div></td><td>سياحة وسفر</td><td style="font-weight:700">2</td><td style="color:var(--accent3);font-weight:700">$2,400</td><td>38,100</td><td>820</td><td><span class="sbadge s-active">نشط</span></td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">تفاصيل</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAYMENTS ===== -->
+
+<div id="payments" class="page">
+  <div class="topbar">
+    <div class="page-ttl"><h2>المدفوعات 💰</h2><p>سجل جميع المعاملات المالية</p></div>
+    <div class="actions">
+      <button class="btn btn-ghost">📥 تصدير</button>
+      <button class="btn btn-primary" onclick="openModal('payment')">＋ دفعة جديدة</button>
+    </div>
+  </div>
+
+  <div class="sum-row">
+    <div class="sum-box">
+      <div class="sum-val" style="color:var(--accent3)">$12,840</div>
+      <div class="sum-lbl">إجمالي الإيرادات</div>
+    </div>
+    <div class="sum-box">
+      <div class="sum-val" style="color:var(--accent2)">$4,600</div>
+      <div class="sum-lbl">عمولات مدفوعة</div>
+    </div>
+    <div class="sum-box">
+      <div class="sum-val" style="color:var(--gold)">$8,240</div>
+      <div class="sum-lbl">صافي الربح</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card" style="animation-delay:.1s">
+      <div class="card-hd"><span class="card-ttl">📥 مدفوعات المعلنين</span><span class="cbadge">وارد</span></div>
+      <div class="pay-item">
+        <div class="pay-ico" style="background:rgba(62,207,142,.1)">💳</div>
+        <div class="pay-info"><div class="pay-name">متجر الأناقة</div><div class="pay-date">3 مايو 2025 — حملة رمضان</div></div>
+        <div class="pay-amount in">+$1,200</div>
+      </div>
+      <div class="pay-item">
+        <div class="pay-ico" style="background:rgba(62,207,142,.1)">💳</div>
+        <div class="pay-info"><div class="pay-name">تك العرب</div><div class="pay-date">1 مايو 2025 — حملة X1</div></div>
+        <div class="pay-amount in">+$2,500</div>
+      </div>
+      <div class="pay-item">
+        <div class="pay-ico" style="background:rgba(62,207,142,.1)">💳</div>
+        <div class="pay-info"><div class="pay-name">سفريات الحلم</div><div class="pay-date">28 أبريل 2025 — رحلات أوروبا</div></div>
+        <div class="pay-amount in">+$1,800</div>
+      </div>
+      <div class="pay-item">
+        <div class="pay-ico" style="background:rgba(62,207,142,.1)">💳</div>
+        <div class="pay-info"><div class="pay-name">مطاعم الذوق</div><div class="pay-date">25 أبريل 2025 — عروض الصيف</div></div>
+        <div class="pay-amount in">+$800</div>
+      </div>
+    </div>
+
+```
+<div class="card" style="animation-delay:.15s">
+  <div class="card-hd"><span class="card-ttl">📤 عمولات المسوقين</span><span class="cbadge" style="background:rgba(255,107,138,.1);color:var(--accent2)">صادر</span></div>
+  <div class="pay-item">
+    <div class="pay-ico" style="background:rgba(255,107,138,.1)">💸</div>
+    <div class="pay-info"><div class="pay-name">أحمد السعيد</div><div class="pay-date">3 مايو 2025 — عمولة شهرية</div></div>
+    <div class="pay-amount out">-$720</div>
+  </div>
+  <div class="pay-item">
+    <div class="pay-ico" style="background:rgba(255,107,138,.1)">💸</div>
+    <div class="pay-info"><div class="pay-name">سارة المحمد</div><div class="pay-date">3 مايو 2025 — عمولة شهرية</div></div>
+    <div class="pay-amount out">-$567</div>
+  </div>
+  <div class="pay-item">
+    <div class="pay-ico" style="background:rgba(255,107,138,.1)">💸</div>
+    <div class="pay-info"><div class="pay-name">عمر الرشيد</div><div class="pay-date">2 مايو 2025 — عمولة شهرية</div></div>
+    <div class="pay-amount out">-$462</div>
+  </div>
+  <div class="pay-item">
+    <div class="pay-ico" style="background:rgba(255,107,138,.1)">💸</div>
+    <div class="pay-info"><div class="pay-name">نور العتيبي</div><div class="pay-date">2 مايو 2025 — عمولة شهرية</div></div>
+    <div class="pay-amount out">-$360</div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <div class="card" style="animation-delay:.2s">
+    <div class="card-hd"><span class="card-ttl">سجل كل المعاملات</span></div>
+    <table class="tbl">
+      <thead><tr><th>التاريخ</th><th>النوع</th><th>الطرف</th><th>الوصف</th><th>المبلغ</th><th>الحالة</th></tr></thead>
+      <tbody>
+        <tr><td style="font-size:11px;color:var(--muted)">03 مايو 2025</td><td><span class="sbadge s-active">وارد</span></td><td>متجر الأناقة</td><td style="color:var(--muted);font-size:12px">حملة رمضان 2025</td><td style="color:var(--accent3);font-weight:700">+$1,200</td><td><span class="sbadge s-active">مكتمل</span></td></tr>
+        <tr><td style="font-size:11px;color:var(--muted)">03 مايو 2025</td><td><span class="sbadge s-ended">صادر</span></td><td>أحمد السعيد</td><td style="color:var(--muted);font-size:12px">عمولة شهر مايو</td><td style="color:var(--accent2);font-weight:700">-$720</td><td><span class="sbadge s-active">مكتمل</span></td></tr>
+        <tr><td style="font-size:11px;color:var(--muted)">01 مايو 2025</td><td><span class="sbadge s-active">وارد</span></td><td>تك العرب</td><td style="color:var(--muted);font-size:12px">حملة إطلاق X1</td><td style="color:var(--accent3);font-weight:700">+$2,500</td><td><span class="sbadge s-active">مكتمل</span></td></tr>
+        <tr><td style="font-size:11px;color:var(--muted)">28 أبريل 2025</td><td><span class="sbadge s-active">وارد</span></td><td>سفريات الحلم</td><td style="color:var(--muted);font-size:12px">رحلات أوروبا</td><td style="color:var(--accent3);font-weight:700">+$1,800</td><td><span class="sbadge s-active">مكتمل</span></td></tr>
+        <tr><td style="font-size:11px;color:var(--muted)">25 أبريل 2025</td><td><span class="sbadge s-pending">قيد الانتظار</span></td><td>مطاعم الذوق</td><td style="color:var(--muted);font-size:12px">عروض الصيف</td><td style="color:var(--gold);font-weight:700">$800</td><td><span class="sbadge s-pending">معلّق</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== REPORTS ===== -->
+
+<div id="reports" class="page">
+  <div class="topbar">
+    <div class="page-ttl"><h2>التقارير 📈</h2><p>تحليل شامل لأداء منصتك</p></div>
+    <div class="actions"><button class="btn btn-ghost">📥 تنزيل PDF</button></div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card sc1"><div class="stat-icon">📊</div><div class="stat-lbl">معدل التحويل</div><div class="stat-val" style="color:var(--accent)">2.8%</div><span class="badge-chg up">▲ 0.3%</span></div>
+    <div class="stat-card sc2"><div class="stat-icon">💵</div><div class="stat-lbl">تكلفة النقرة</div><div class="stat-val" style="color:var(--accent2)">$0.08</div><span class="badge-chg down">▼ $0.01</span></div>
+    <div class="stat-card sc3"><div class="stat-icon">🎯</div><div class="stat-lbl">ROI المتوسط</div><div class="stat-val" style="color:var(--accent3)">340%</div><span class="badge-chg up">▲ 12%</span></div>
+    <div class="stat-card sc4"><div class="stat-icon">🏆</div><div class="stat-lbl">أفضل حملة</div><div class="stat-val" style="color:var(--gold);font-size:18px">إطلاق X1</div><span class="badge-chg up">1,240 تحويل</span></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><span class="card-ttl">الأداء الشهري — 2025</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:10px;padding:0 4px">
+      <span>يناير</span><span>فبراير</span><span>مارس</span><span>أبريل</span><span>مايو</span><span>يونيو</span><span>يوليو</span><span>أغسطس</span><span>سبتمبر</span><span>أكتوبر</span><span>نوفمبر</span><span>ديسمبر</span>
+    </div>
+    <div class="bars-wrap" style="height:100px">
+      <div class="bar" style="height:40%"></div>
+      <div class="bar" style="height:55%"></div>
+      <div class="bar" style="height:65%"></div>
+      <div class="bar" style="height:80%"></div>
+      <div class="bar hl" style="height:95%"></div>
+      <div class="bar" style="height:20%;opacity:.4"></div>
+      <div class="bar" style="height:15%;opacity:.3"></div>
+      <div class="bar" style="height:10%;opacity:.2"></div>
+      <div class="bar" style="height:8%;opacity:.15"></div>
+      <div class="bar" style="height:6%;opacity:.1"></div>
+      <div class="bar" style="height:5%;opacity:.1"></div>
+      <div class="bar" style="height:4%;opacity:.08"></div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:10px">البيانات المستقبلية ستظهر تلقائياً</div>
+  </div>
+</div>
+
+<!-- ===== SETTINGS ===== -->
+
+<div id="settings" class="page">
+  <div class="topbar">
+    <div class="page-ttl"><h2>الإعدادات ⚙️</h2><p>تخصيص منصتك وإدارة الحساب</p></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><span class="card-ttl">معلومات المنصة</span></div>
+      <div class="fg"><label class="flbl">اسم المنصة</label><input class="finput" value="إعلاني"></div>
+      <div class="fg"><label class="flbl">البريد الإلكتروني</label><input class="finput" value="admin@e3lani.com"></div>
+      <div class="fg"><label class="flbl">العملة الافتراضية</label><select class="finput"><option>دولار أمريكي ($)</option><option>ريال سعودي (ر.س)</option><option>درهم إماراتي (د.إ)</option></select></div>
+      <button class="btn btn-primary" onclick="showToast('تم حفظ الإعدادات ✓')">حفظ التغييرات</button>
+    </div>
+    <div class="card">
+      <div class="card-hd"><span class="card-ttl">إعدادات العمولات</span></div>
+      <div class="fg"><label class="flbl">الحد الأدنى للسحب ($)</label><input class="finput" value="50" type="number"></div>
+      <div class="fg"><label class="flbl">عمولة المنصة الافتراضية (%)</label><input class="finput" value="10" type="number"></div>
+      <div class="fg"><label class="flbl">دورة الدفع</label><select class="finput"><option>شهري</option><option>أسبوعي</option><option>فوري</option></select></div>
+      <button class="btn btn-primary" onclick="showToast('تم حفظ الإعدادات ✓')">حفظ التغييرات</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ===== MODALS ===== -->
+
+<div class="overlay" id="overlay" onclick="closeOverlay(event)">
+  <!-- Campaign Modal -->
+  <div class="modal" id="modal-campaign">
+    <div class="modal-ttl">➕ إنشاء حملة إعلانية</div>
+    <div class="fg"><label class="flbl">اسم الحملة</label><input class="finput" placeholder="مثال: حملة العيد 2025"></div>
+    <div class="fg"><label class="flbl">المُعلِن</label><select class="finput"><option>متجر الأناقة</option><option>تك العرب</option><option>مطاعم الذوق</option><option>سفريات الحلم</option></select></div>
+    <div class="frow">
+      <div class="fg"><label class="flbl">الميزانية ($)</label><input class="finput" type="number" placeholder="1000"></div>
+      <div class="fg"><label class="flbl">العمولة (%)</label><input class="finput" type="number" placeholder="15"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="flbl">تاريخ البداية</label><input class="finput" type="date"></div>
+      <div class="fg"><label class="flbl">تاريخ النهاية</label><input class="finput" type="date"></div>
+    </div>
+    <div class="fg"><label class="flbl">وصف الحملة</label><textarea class="finput" rows="3" placeholder="وصف مختصر..."></textarea></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveAndClose('تم إنشاء الحملة بنجاح 🚀')">إنشاء الحملة</button>
+    </div>
+  </div>
+
+  <!-- Marketer Modal -->
+
+  <div class="modal" id="modal-marketer" style="display:none">
+    <div class="modal-ttl">🤝 إضافة مسوق جديد</div>
+    <div class="frow">
+      <div class="fg"><label class="flbl">الاسم الكامل</label><input class="finput" placeholder="محمد علي"></div>
+      <div class="fg"><label class="flbl">البريد الإلكتروني</label><input class="finput" placeholder="email@example.com"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="flbl">رقم الهاتف</label><input class="finput" placeholder="+966 5X XXX XXXX"></div>
+      <div class="fg"><label class="flbl">التخصص</label><select class="finput"><option>سوشيال ميديا</option><option>يوتيوبر</option><option>بلوغر</option><option>مؤثر</option></select></div>
+    </div>
+    <div class="fg"><label class="flbl">نسبة العمولة (%)</label><input class="finput" type="number" placeholder="15"></div>
+    <div class="fg"><label class="flbl">بيانات الدفع (IBAN / PayPal)</label><input class="finput" placeholder="SA00 0000 0000 0000 0000 0000"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveAndClose('تم إضافة المسوق بنجاح ✓')">إضافة المسوق</button>
+    </div>
+  </div>
+
+  <!-- Advertiser Modal -->
+
+  <div class="modal" id="modal-advertiser" style="display:none">
+    <div class="modal-ttl">🏢 إضافة معلن جديد</div>
+    <div class="frow">
+      <div class="fg"><label class="flbl">اسم الشركة</label><input class="finput" placeholder="شركة X"></div>
+      <div class="fg"><label class="flbl">القطاع</label><select class="finput"><option>ملابس وأزياء</option><option>تقنية</option><option>طعام</option><option>سفر</option><option>تعليم</option></select></div>
+    </div>
+    <div class="fg"><label class="flbl">البريد الإلكتروني</label><input class="finput" placeholder="contact@company.com"></div>
+    <div class="fg"><label class="flbl">رقم الهاتف</label><input class="finput" placeholder="+966 5X XXX XXXX"></div>
+    <div class="fg"><label class="flbl">ميزانية الإعلان الشهرية ($)</label><input class="finput" type="number" placeholder="2000"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveAndClose('تم إضافة المعلن بنجاح ✓')">إضافة المعلن</button>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+
+  <div class="modal" id="modal-payment" style="display:none">
+    <div class="modal-ttl">💰 تسجيل دفعة جديدة</div>
+    <div class="fg"><label class="flbl">نوع المعاملة</label><select class="finput"><option>وارد — من معلن</option><option>صادر — عمولة مسوق</option></select></div>
+    <div class="frow">
+      <div class="fg"><label class="flbl">الطرف</label><select class="finput"><option>متجر الأناقة</option><option>تك العرب</option><option>أحمد السعيد</option><option>سارة المحمد</option></select></div>
+      <div class="fg"><label class="flbl">المبلغ ($)</label><input class="finput" type="number" placeholder="500"></div>
+    </div>
+    <div class="fg"><label class="flbl">الوصف</label><input class="finput" placeholder="مثال: عمولة شهر مايو"></div>
+    <div class="fg"><label class="flbl">طريقة الدفع</label><select class="finput"><option>تحويل بنكي</option><option>PayPal</option><option>Stripe</option><option>نقدي</option></select></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveAndClose('تم تسجيل الدفعة بنجاح 💰')">تسجيل الدفعة</button>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+
+  <div class="modal" id="modal-edit" style="display:none">
+    <div class="modal-ttl">✏️ تعديل الحملة</div>
+    <div class="fg"><label class="flbl">اسم الحملة</label><input class="finput" value="حملة رمضان 2025"></div>
+    <div class="frow">
+      <div class="fg"><label class="flbl">الميزانية ($)</label><input class="finput" type="number" value="1200"></div>
+      <div class="fg"><label class="flbl">الحالة</label><select class="finput"><option>نشطة</option><option>متوقفة</option><option>منتهية</option></select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-danger" onclick="closeModal()">🗑️ حذف</button>
+      <button class="btn btn-primary" onclick="saveAndClose('تم تحديث الحملة ✓')">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+
+<div class="toast" id="toast">✅ تمت العملية بنجاح</div>
+
+<script>
+// Navigation
+function goTo(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+  if (el) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+  }
+}
+
+// Modal system
+let currentModal = null;
+function openModal(type) {
+  document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+  const m = document.getElementById('modal-' + type);
+  if (m) { m.style.display = 'block'; currentModal = type; }
+  document.getElementById('overlay').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('overlay').classList.remove('show');
+  document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+}
+function closeOverlay(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+function saveAndClose(msg) {
+  closeModal();
+  showToast(msg);
+}
+
+// Toast
+function showToast(msg, isErr = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isErr ? ' err' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Bar hover
+document.querySelectorAll('.bar').forEach(b => {
+  b.addEventListener('mouseenter', () => b.classList.add('hl'));
+  b.addEventListener('mouseleave', () => { if (!b.dataset.hl) b.classList.remove('hl'); });
+});
+</script>
+
+</body>
+</html>
